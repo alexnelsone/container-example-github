@@ -1,25 +1,5 @@
 name: Push container to ECR
 
-inputs:
-
-  platforms:
-    description: 'The platforms to build images for, comma-separated. Valid options are linux/amd64 and linux/arm64.'
-    required: true
-    default: 'linux/amd64,linux/arm64'
-
-  context:
-    description: 'The path to the docker context, if not the root of the repository.'
-    required: true
-    default: .
-
-  dockerfile:
-    description: 'The path to the dockerfile, if not in the root of the repository.'
-    required: true
-    default: 'Dockerfile'
-
-  ssh:
-    description: 'SSH configuration, if needed'
-    required: false
 
 on:
   push:
@@ -45,7 +25,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.SANDBOX_DEPLOYMENT_ROLE }}
-          aws-region: ${{ variables.SANDBOX_REGION }}
+          aws-region: ${{ vars.SANDBOX_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
