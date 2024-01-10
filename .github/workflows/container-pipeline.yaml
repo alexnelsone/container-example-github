@@ -27,6 +27,15 @@ jobs:
           role-to-assume: ${{ secrets.SANDBOX_DEPLOYMENT_ROLE }}
           aws-region: ${{ vars.SANDBOX_REGION }}
 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws-us-gov:iam::${{ secrets.SANDBOX_ACCOUNT_ID }}:role/${{ secrets.SANDBOX_ROLE }}
+          aws-region: ${{ vars.SANDBOX_REGION }}
+
+
+
+
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
