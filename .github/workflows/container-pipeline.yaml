@@ -25,6 +25,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.SANDBOX_DEPLOYMENT_ROLE }}
+          role-session-name: GitHubActions
           aws-region: ${{ vars.SANDBOX_REGION }}
 
 
@@ -46,6 +47,7 @@ jobs:
           ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
+          aws sts assume-role --role-arn arn:aws-us-gov:iam::${{ secrets.SANDBOX_ACCOUNT_ID }}:role/${{ secrets.SANDBOX_ROLE }} --role-session-name GITHUBACTIONS
           # Build a docker container and
           # push it to ECR so that it can
           # be deployed to ECS.
