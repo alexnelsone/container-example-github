@@ -24,20 +24,15 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.SANDBOX_DEPLOYMENT_ROLE }}
+          role-to-assume: ${{ secrets.ASSUME_ROLE }}
           role-session-name: GitHubActions
-          aws-region: ${{ vars.SANDBOX_REGION }}
-
-
-
-
-
+          aws-region: ${{ vars.REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
         with:
-          registries:  ${{ secrets.SANDBOX_ACCOUNT_ID }}
+          registries:  ${{ secrets.DEVTOOLS_ACCOUNT_ID }}
 
 
       - name: Build, tag, and push image to Amazon ECR
@@ -47,7 +42,6 @@ jobs:
           ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          aws sts assume-role --role-arn arn:aws-us-gov:iam::${{ secrets.SANDBOX_ACCOUNT_ID }}:role/${{ secrets.SANDBOX_ROLE }} --role-session-name GITHUBACTIONS
           # Build a docker container and
           # push it to ECR so that it can
           # be deployed to ECS.
