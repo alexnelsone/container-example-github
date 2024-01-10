@@ -40,10 +40,11 @@ jobs:
 #          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
+          ECR_REGISTRY: ${{ secrets.SANDBOX_ACCOUNT_ID }}.dkr.ecr.${{ vars.SANDBOX_REGION }}.amazonaws.com
         run: |
           
           
-          aws ecr get-login-password --region ${{ vars.SANDBOX_REGION }} | docker login --username AWS --password-stdin ${{ secrets.SANDBOX_ACCOUNT_ID }}.dkr.ecr.${{ vars.SANDBOX_REGION }}.amazonaws.com
+          aws ecr get-login-password --region ${{ vars.SANDBOX_REGION }} | docker login --username AWS --password-stdin $ECR_REGISTRY
           # Build a docker container and
           # push it to ECR so that it can
           # be deployed to ECS.
