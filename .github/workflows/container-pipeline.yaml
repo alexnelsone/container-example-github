@@ -27,24 +27,21 @@ jobs:
           role-to-assume: ${{ secrets.SANDBOX_DEPLOYMENT_ROLE }}
           aws-region: ${{ vars.SANDBOX_REGION }}
 
-#      - name: Login to Amazon ECR
-#        id: login-ecr
-#        uses: aws-actions/amazon-ecr-login@v2
-#        with:
-#          registries:  ${{ secrets.SANDBOX_ACCOUNT_ID }}
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          registries:  ${{ secrets.SANDBOX_ACCOUNT_ID }}
 
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         env:
-#          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
-          ECR_REGISTRY: ${{ secrets.SANDBOX_ACCOUNT_ID }}.dkr.ecr.${{ vars.SANDBOX_REGION }}.amazonaws.com
         run: |
           
-          
-          aws ecr get-login-password --region ${{ vars.SANDBOX_REGION }} | docker login --username AWS --password-stdin $ECR_REGISTRY
           # Build a docker container and
           # push it to ECR so that it can
           # be deployed to ECS.
