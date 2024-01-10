@@ -28,11 +28,11 @@ jobs:
           role-session-name: GitHubActions
           aws-region: ${{ vars.REGION }}
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-        with:
-          registries:  ${{ secrets.DEVTOOLS_ACCOUNT_ID }}
+#      - name: Login to Amazon ECR
+#        id: login-ecr
+#        uses: aws-actions/amazon-ecr-login@v2
+#        with:
+#          registries:  ${{ secrets.DEVTOOLS_ACCOUNT_ID }}
 
 
       - name: Build, tag, and push image to Amazon ECR
@@ -47,7 +47,7 @@ jobs:
           export AWS_SECRET_ACCESS_KEY=$(echo $OUT | jq -r '.Credentials''.SecretAccessKey');\
           export AWS_SESSION_TOKEN=$(echo $OUT | jq -r '.Credentials''.SessionToken');
           aws sts get-caller-identity
-          aws s3 ls
+          aws ecr get-login-password --region ${{ vars.REGION }} | docker login --username AWS --password-stdin ${{ secrets.DEVTOOLS_ACCOUNT_ID }}.dkr.ecr.${{ vars.REGION }}.amazonaws.com
           # Build a docker container and
           # push it to ECR so that it can
           # be deployed to ECS.
