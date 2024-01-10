@@ -1,0 +1,28 @@
+name: Push container to ECR
+
+on:
+  push:
+    branches:
+      - "main"
+  release:
+    types:
+      - "published"
+
+jobs:
+  push-container:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    step:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.SANDBOX_DEPLOYMENT_ROLE }}
+          aws-region: ${{ variables.SANDBOX_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
